@@ -1,0 +1,145 @@
+
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">GitHub Search</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav navbar-right">
+				<li class="active"><a href="#">Home</a></li>
+				<li><a href="#about">About</a></li>
+				<li><a href="#contact">Contact</a></li>
+				</ul>
+			</div>
+		</div>
+	
+	</nav>
+	
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-7">
+					<form #f="ngForm" (ngSubmit)="addUsername(f.value)">
+						<div class="form-group">
+							<div class="row">
+									<div class="col-sm-10">
+											<label for="usr">Search GitHub Profile</label>
+											<input type="text" class="form-control" name="login" ngModel>
+									</div>
+									<div class="col-sm-2">
+											<button id="searchbutton" type="Submit" class="btn btn-primary btn-block btn-sm">
+											<span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;Search
+										</button>
+									</div>
+							</div>
+						</div>
+					</form>		
+			</div>
+			<div class="col-sm-1">
+					
+			</div>
+			<div class="col-sm-4">
+				<div class="row">
+					<div class="col-sm-12">
+						<label>Saved Users</label>
+					</div>
+				</div>
+				<div class="row"  id="sorting">
+						<div class="col-sm-12">
+							<div class="btn-group btn-group-justified">
+								  <div class="btn-group">
+										<button *ngIf(namesort) type="button" class="btn btn-default btn-sm glyphicon glyphicon-menu-up" (click)="sort('nameasc')">&nbsp;Name</button>
+										<button *ngIf(!namesort) type="button" class="btn btn-default btn-sm glyphicon glyphicon-menu-down" (click)="sort('namedsc')">&nbsp;Name</button>
+								  </div>
+									<div class="btn-group">
+										<button *ngIf(follsort) type="button" class="btn btn-default btn-sm glyphicon glyphicon-menu-up" (click)="sort('follasc')">&nbsp;Followers</button>
+										<button *ngIf(!follsort) type="button" class="btn btn-default btn-sm glyphicon glyphicon-menu-down" (click)="sort('folldsc')">&nbsp;Followers</button>
+									</div>
+								  <div class="btn-group">
+										<button type="button" class="btn btn-default btn-sm glyphicon glyphicon-remove" (click)="delall()">&nbsp;Delete</button>
+								  </div>
+									
+							</div>
+						</div>
+				</div>					
+			</div>
+		</div>
+		
+		
+		<div class="row">
+			<div class="col-sm-8">
+				<div class="row" id="wrapperdetails" *ngIf="showprofile">
+					<div class="col-sm-12" id="details" *ngFor="let user of savedUserDetails">
+						<div class="row">
+							<div class="col-sm-4" id="innerdetails1">
+								<div class="row">
+									<div class="class-sm-12">
+										<a href="{{user.html_url}}" target="_blank"><img src="{{user.avatar_url}}" width="200" height="200"></a>
+									</div>
+								</div>
+								<div class="row">
+									<div class="class-sm-12">
+										<span id="namelabel"><label *ngIf="user.name" >{{user.name}}</label><br />
+										<span style="color:#6f6969">{{user.login}}</span>
+										</span><br />
+										<span style="line-height:25px;">
+												<a *ngIf="user.email" href="mailto:{{user.email}}"  target="_blank" class="glyphicon glyphicon-envelope">&nbsp;{{user.email}}</a><br />
+												<a *ngIf="user.blog" href="{{user.blog}}"  target="_blank" class="glyphicon glyphicon-cloud">&nbsp;{{user.blog}}</a>
+										</span>
+										<div class="row">
+												<div class="col-sm-10">
+															<div id="addbutton"><br />
+														<button *ngIf="showsavebutton" class="btn btn-primary btn-block glyphicon glyphicon-star active" (click)="saveUsername(user)">Save</button>
+														<button *ngIf="!showsavebutton" class="btn btn-primary btn-block glyphicon glyphicon-star disabled" (click)="saveUsername(user)">Save</button>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													</div>
+								
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-8" id="innerdetails2">
+								<span><a href="{{user.html_url}}?tab=followers" target="_blank">Followers</a><span class="badge" id="badgedet">{{user.followers}}</span></span>&nbsp;&nbsp;&nbsp;&nbsp;
+								<span><a href="{{user.html_url}}?tab=following" target="_blank">Following</a><span class="badge" id="badgedet">{{user.following}}</span></span>&nbsp;&nbsp;&nbsp;&nbsp;							
+								<span><a href="{{user.html_url}}?tab=repositories" target="_blank">Repos</a><span class="badge" id="badgedet">{{user.public_repos}}</span></span>&nbsp;&nbsp;&nbsp;&nbsp;
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="row">
+					<div class="col-sm-1">
+					</div>
+					<div class="col-sm-10">
+						<ul class="list-group">
+						  <li class="list-group-item" *ngFor="let username of savedUsername;let i = index">
+							<img src="{{username.avatar_url}}" width="25" height="25">
+							<span><a href="#" (click)="showUsername(username)">{{username.login}}</a></span><button id="del" class="btn btn-danger btn-xs" (click)="deleteUsername(i)">X</button>
+							<span class="badge" id="badge">{{i+1}}</span>
+						  </li>
+						</ul>
+					</div>
+					<div class="col-sm-1">
+					</div>
+				
+				</div>
+			</div>		
+		
+		</div>
+
+		<div class="row" *ngIf="!showprofile;" id="noprofile">
+								<div class="col-sm-12">
+									<img src="../assets/noprofile.png" class="img-responsive">
+								</div>
+						</div>
+	
+	</div>
